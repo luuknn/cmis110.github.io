@@ -26,14 +26,6 @@
         <span><a title="种子订阅" class="" href="/feed/" target="_blank">订阅</a></span>
         </nav>
         <article class="content">
-            <ul>
-                {% for post in site.posts %}
-                <li>
-                    <a href="{{ post.url }}">{{ post.title }}</a>
-                    {{ post.excerpt }}
-                </li>
-                {% endfor %}
-            </ul>
             {{ content }}
         </article>
       </div>
