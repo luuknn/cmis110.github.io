@@ -1,0 +1,16 @@
+future: true
+permalink: /:title/
+url: https://jianlingshih.github.io
+name: 守望子
+author: cmis110
+qq: 
+email: jianling.shih@gmail.com
+duoshuo: cmis110
+beian: 
+cnzz: 
+weibo: cmis110
+github: jianlingshih
+paginate: 20
+highlighter: rouge
+truncate: true
+about: "守望子(cmis110)"
