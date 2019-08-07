@@ -17,9 +17,9 @@ comments: no
 ---
 ### 经历
 
-* 2004.09 ~ 2011.04 
+* 2015 ~ 2018
 
-* 2011.04 ~ Now     
+* 2018 ~ Now     
 
 
 ----
@@ -41,6 +41,6 @@ Twitter: [cmis110](https://twitter.com/cmis110)
 
 ----
 
-[![新浪微博]()](http://weibo.com/776781588)
+[![新浪微博](http://wx3.sinaimg.cn/mw690/a0949f30ly1g5qwfgvcffj20au03bglr.jpg)](http://weibo.com/776781588)
 
 ----
