@@ -1,16 +1,18 @@
 future: true
 permalink: /:title/
-url: https://jianlingshih.github.io
-name: 守望子
+url: https://cmis110.github.io/about
+name: 守望子的个人博客
 author: cmis110
-qq: 
+qq:
 email: jianling.shih@gmail.com
 duoshuo: cmis110
 beian: 
 cnzz: 
-weibo: cmis110
-github: jianlingshih
+weibo: https://weibo.com/cmis110
+weiboBanner: http://wx3.sinaimg.cn/mw690/a0949f30ly1g5qwfgvcffj20au03bglr.jpg
+twitter: https://twitter.com/cmis110
+github: cmis110
 paginate: 20
 highlighter: rouge
 truncate: true
-about: "守望子(cmis110)"
+about: "守望子(jianling)"
