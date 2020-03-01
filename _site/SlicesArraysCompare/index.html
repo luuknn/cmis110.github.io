@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="cmis110" />
+    <title>切片或数组的3种比较方式</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link href="/feed/" rel="alternate" title="cmis110" type="application/atom+xml" />
+    <link rel="stylesheet" href="/media/css/style.css" />
+    <link rel="stylesheet" href="/media/css/highlight.css" />
+    <script type="text/javascript" src="/media/js/jquery-1.7.1.min.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="main" role="main">
+        <header>
+        <h1>切片或数组的3种比较方式</h1>
+        </header>
+        <nav>
+        <span><a title="网站首页" class="" href="/">首页</a></span>
+        <span><a title="文章分类" class="" href="/categories/">分类</a></span>
+        <span><a title="标签索引" class="" href="/tags/">标签</a></span>
+        <!--<span><a title="友情链接" class="" href="/links/">链接</a></span>-->
+        <!--<span><a title="留言交流" class="" href="/guestbook/">留言</a></span>-->
+        <span><a title="关于站长" class="" href="/about/">关于</a></span>
+        <!--<span><a title="种子订阅" class="" href="/feed/" target="_blank">订阅</a></span>-->
+        </nav>
+        <article class="content">
+            <section class="meta">
+<span class="time">
+  <time datetime="2020-02-29">2020-02-29</time>
+</span>
+
+ | 
+<span class="categories">
+  分类
+  
+  <a href="/categories/#Go语言学习" title="Go语言学习">Go语言学习</a>&nbsp;
+  
+</span>
+
+
+ | 
+<span class="tags">
+  标签
+  
+  <a href="/tags/#Slices and arrays" title="Slices and arrays">Slices and arrays</a>&nbsp;
+  
+</span>
+
+</section>
+<section class="post">
+<h1 id="通用案例">通用案例</h1>
+
+<p>在大多数情况下，你将会自己编写代码来比较两个切片中的元素</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Equal tells whether a and b contain the same elements.</span>
+<span class="c">// A nil argument is equivalent to an empty slice.</span>
+<span class="k">func</span> <span class="n">Equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="no">false</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">a</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="no">false</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="no">true</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>对于数组来说，可以直接使用比较运算符 == 和 !=</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">a</span> <span class="o">:=</span> <span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">}</span>  
+	<span class="n">b</span> <span class="o">:=</span> <span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>  
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="c">// false</span>
+</code></pre></div></div>
+<p>当数组的元素是可比较的时候，数组也是可比较的 。<br />
+如果两个数组对应的元素是相等的那么这两个数组也是相等的，返回 true。 <br />
+[-go 语言说明：比较运算符] (https://golang.org/ref/spec#Comparison_operators)</p>
+
+<h1 id="byte-slice">byte slice</h1>
+<p>我们可以使用<a href="https://golang.org/pkg/bytes/#Equal">bytes.Equal</a>来比较 byte 型的切片。</p>
+
+<h1 id="递归比较">递归比较</h1>
+<p>出于测试目的，你会选择使用<a href="https://golang.org/pkg/reflect/#DeepEqual">reflect.DeepEqual</a>。它用来循环地比较两个任意类型的元素。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">var</span> <span class="n">a</span> <span class="p">[]</span><span class="kt">int</span> <span class="o">=</span> <span class="no">nil</span>
+	<span class="k">var</span> <span class="n">b</span> <span class="p">[]</span><span class="kt">int</span> <span class="o">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">reflect</span><span class="o">.</span><span class="n">DeepEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span> <span class="c">// false</span>
+</code></pre></div></div>
+<p>这个函数的性能相比上面的要差很多，但是在简单性和准确性非常严格的情况下是非常有用的。</p>
+
+</section>
+<section align="right">
+<br/>
+<span>
+	<a   class="pageNavInvalid"  >上一篇</a>
+	&nbsp;&nbsp;&nbsp;
+	<a  href="/SlicesArraysExplained/" class="pageNav"  >下一篇</a>
+</span>
+</section>
+<!-- JiaThis Button BEGIN -->
+<script type="text/javascript">
+var jiathis_config = {data_track_clickback:'true'};
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?move=0&amp;uid=2121774" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+	
+	<div class="ds-thread" />
+		
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"cmis110"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc91691cf4004b194f7847896cca17dbb' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56673760-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+        </article>
+      </div>
+
+    <footer>
+        <p>
+          <script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc91691cf4004b194f7847896cca17dbb' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+          <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-56673760-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+        </p>
+        <p><small>
+            <a href="http://github.com/cmis110/jianlingshih.github.io/new/gh-pages/_posts" target="_blank" title="撰写文章">Po</a>wer<a href="http://github.com/cmis110/jianlingshih.github.io/edit/gh-pages/_posts/2020-02-29-SlicesArraysCompare.md" target="_blank" title="编辑页面">ed</a> by <a href="http://jekyllrb.com" target="_blank">Jekyll</a> @ <a href="http://github.com/cmis110/cmis110.github.io" target="_blank" title="项目主页">GitHub</a>
+             | <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/cn/" target="_blank" title="许可协议">©</a> 2019 - 2020 <a href="/about/">cmis110</a>
+             | <a href="https://weibo.com/cmis110" target="_blank">@守望子</a>
+
+
+         </small></p>
+    </footer>
+
+    </div>
+  </body>
+</html>

@@ -7,7 +7,7 @@
     <title>守望子的个人博客</title>
     <link href="http://localhost:4000/feed/" rel="self" />
     <link href="http://localhost:4000" />
-    <lastBuildDate>2020-02-29T23:45:58+08:00</lastBuildDate>
+    <lastBuildDate>2020-03-01T14:04:38+08:00</lastBuildDate>
     <webMaster>jianling.shih@gmail.com</webMaster>
     
     <item>
@@ -75,6 +75,55 @@
   <li>第二个迭代参数是可选的。</li>
   <li>如果 slice 为 nil，迭代的次数将会为0。开始循环迭代前，内部会进行一次判断。</li>
 </ul>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>切片或数组的3种比较方式</title>
+      <link href="http://localhost:4000/SlicesArraysCompare/"/>
+      <pubDate>2020-02-29T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/SlicesArraysCompare</guid>
+      <content:encoded><![CDATA[<h1 id="通用案例">通用案例</h1>
+
+<p>在大多数情况下，你将会自己编写代码来比较两个切片中的元素</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Equal tells whether a and b contain the same elements.</span>
+<span class="c">// A nil argument is equivalent to an empty slice.</span>
+<span class="k">func</span> <span class="n">Equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="no">false</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">a</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="no">false</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="no">true</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>对于数组来说，可以直接使用比较运算符 == 和 !=</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">a</span> <span class="o">:=</span> <span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">}</span>  
+	<span class="n">b</span> <span class="o">:=</span> <span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>  
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="c">// false</span>
+</code></pre></div></div>
+<p>当数组的元素是可比较的时候，数组也是可比较的 。<br />
+如果两个数组对应的元素是相等的那么这两个数组也是相等的，返回 true。 <br />
+[-go 语言说明：比较运算符] (https://golang.org/ref/spec#Comparison_operators)</p>
+
+<h1 id="byte-slice">byte slice</h1>
+<p>我们可以使用<a href="https://golang.org/pkg/bytes/#Equal">bytes.Equal</a>来比较 byte 型的切片。</p>
+
+<h1 id="递归比较">递归比较</h1>
+<p>出于测试目的，你会选择使用<a href="https://golang.org/pkg/reflect/#DeepEqual">reflect.DeepEqual</a>。它用来循环地比较两个任意类型的元素。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">var</span> <span class="n">a</span> <span class="p">[]</span><span class="kt">int</span> <span class="o">=</span> <span class="no">nil</span>
+	<span class="k">var</span> <span class="n">b</span> <span class="p">[]</span><span class="kt">int</span> <span class="o">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">reflect</span><span class="o">.</span><span class="n">DeepEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span> <span class="c">// false</span>
+</code></pre></div></div>
+<p>这个函数的性能相比上面的要差很多，但是在简单性和准确性非常严格的情况下是非常有用的。</p>
 ]]></content:encoded>
     </item>
     
