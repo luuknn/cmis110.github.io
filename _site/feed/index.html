@@ -7,7 +7,7 @@
     <title>守望子的个人博客</title>
     <link href="http://localhost:4000/feed/" rel="self" />
     <link href="http://localhost:4000" />
-    <lastBuildDate>2020-03-01T14:04:38+08:00</lastBuildDate>
+    <lastBuildDate>2020-03-01T14:33:47+08:00</lastBuildDate>
     <webMaster>jianling.shih@gmail.com</webMaster>
     
     <item>
@@ -16,7 +16,7 @@
       <pubDate>2020-02-29T00:00:00+08:00</pubDate>
       <author>cmis110</author>
       <guid>http://localhost:4000/SlicesArraysExplained</guid>
-      <content:encoded><![CDATA[<h1 id="基础">基础</h1>
+      <content:encoded><![CDATA[<h1 id="概念">概念</h1>
 
 <p>一个切片不会存储数据,它只是描述了底层数组的一部分</p>
 
@@ -75,6 +75,41 @@
   <li>第二个迭代参数是可选的。</li>
   <li>如果 slice 为 nil，迭代的次数将会为0。开始循环迭代前，内部会进行一次判断。</li>
 </ul>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>删除切片元素的2种方法</title>
+      <link href="http://localhost:4000/SlicesArraysDelete/"/>
+      <pubDate>2020-02-29T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/SlicesArraysDelete</guid>
+      <content:encoded><![CDATA[<h1 id="快速版本改变顺序">快速版本（改变顺序）</h1>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">,</span> <span class="s">"E"</span><span class="p">}</span>
+	<span class="n">i</span> <span class="o">:=</span> <span class="m">2</span>
+
+	<span class="c">// Remove the element at index i from a.</span>
+	<span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="c">// Copy last element to index i.</span>
+	<span class="n">a</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">""</span>   <span class="c">// Erase last element (write zero value).</span>
+	<span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">:</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>   <span class="c">// Truncate slice.</span>
+
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c">// [A B E D]</span>
+</code></pre></div></div>
+<p>这段代码拷贝了一个元素，时间复杂度为常数阶。</p>
+
+<h1 id="慢速版本保持顺序">慢速版本（保持顺序）</h1>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">,</span> <span class="s">"E"</span><span class="p">}</span>
+<span class="n">i</span> <span class="o">:=</span> <span class="m">2</span>
+
+<span class="c">// Remove the element at index i from a.</span>
+<span class="nb">copy</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">:</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="o">:</span><span class="p">])</span> <span class="c">// Shift a[i+1:] left one index.</span>
+<span class="n">a</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">""</span>     <span class="c">// Erase last element (write zero value).</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">:</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>     <span class="c">// Truncate slice.</span>
+
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c">// [A B D E]</span>
+</code></pre></div></div>
+<p>这段代码拷贝了 len(a)-i-1个元素，时间复杂度为线性阶。</p>
 ]]></content:encoded>
     </item>
     

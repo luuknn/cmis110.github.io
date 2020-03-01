@@ -6,7 +6,7 @@ tag: Slices and arrays
 categories: Go语言学习 
 ---
 
-# 基础
+# 概念
 
 一个切片不会存储数据,它只是描述了底层数组的一部分
 
