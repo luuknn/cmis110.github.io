@@ -7,8 +7,73 @@
     <title>守望子的个人博客</title>
     <link href="http://localhost:4000/feed/" rel="self" />
     <link href="http://localhost:4000" />
-    <lastBuildDate>2020-03-01T14:33:47+08:00</lastBuildDate>
+    <lastBuildDate>2020-03-04T15:28:29+08:00</lastBuildDate>
     <webMaster>jianling.shih@gmail.com</webMaster>
+    
+    <item>
+      <title>日期格式化</title>
+      <link href="http://localhost:4000/TimeDateFormat/"/>
+      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/TimeDateFormat</guid>
+      <content:encoded><![CDATA[<h1 id="基本示例">基本示例</h1>
+
+<p>Go 没有采用 yyyy-mm-dd 的展现来格式化时间，而是采用了一个特殊的时间格式<br />
+　　　&lt;font color=#008000&gt; Mon Jan 2 15:04:05 MST 2006 &lt;/font&gt; <br />
+同样格式的时间可以被解析。这个特使的时间格式可以按下面这种方式方便记忆 　&lt;font color=#008000&gt;　2006-01-02 15:04  &lt;/font&gt;</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">const</span> <span class="p">(</span>
+		<span class="n">layoutISO</span> <span class="o">=</span> <span class="s">"2006-01-02"</span>
+		<span class="n">layoutUS</span>  <span class="o">=</span> <span class="s">"January 2, 2006"</span>
+	<span class="p">)</span>
+	<span class="n">date</span> <span class="o">:=</span> <span class="s">"2020-02-29"</span>
+	<span class="n">t</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">layoutISO</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>                  <span class="c">// 2020-02-29 00:00:00 +0000 UTC</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">layoutUS</span><span class="p">))</span> <span class="c">// February 29, 2020</span>
+</code></pre></div></div>
+
+<p>函数</p>
+
+<ul>
+  <li><a href="https://golang.org/pkg/time/#Parse">time.Parse</a>可以用来解析一个日期字符串。</li>
+  <li><a href="https://golang.org/pkg/time/#Time.Format">Format</a>可以对一个 <a href="https://golang.org/pkg/time/#Time">time.Time</a>的值进行格式化。</li>
+</ul>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="k">func</span> <span class="n">Parse</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">value</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">Time</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+      <span class="k">func</span> <span class="p">(</span><span class="n">t</span> <span class="n">Time</span><span class="p">)</span> <span class="n">Format</span><span class="p">(</span><span class="n">layout</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
+</code></pre></div></div>
+
+<h1 id="格式化可选项">格式化可选项</h1>
+<p>Type | Options
+:—-:  | :—-: 
+Year	 | 06   2006
+Month	| 01   1   Jan   January
+Day	| 02   2   _2   (width two, right justified)
+Weekday| 	Mon   Monday
+Hours| 	03   3   15
+Minutes| 	04   4
+Seconds	| 05   5
+ms μs ns	| .000   .000000   .000000000
+ms μs ns	| .999   .999999   .999999999   (trailing zeros removed)
+am/pm| 	PM   pm
+Timezone	| MST
+Offset| 	-0700   -07   -07:00   Z0700   Z07:00</p>
+
+<h1 id="获取当前时间戳">获取当前时间戳</h1>
+<p>可以使用<a href="https://golang.org/pkg/time/#Now">time.Now</a>和方法
+ <a href="https://golang.org/pkg/time/#Time.Unix">time.Unix</a> 或则 <a href="https://golang.org/pkg/time/#Time.UnixNano">time.UnixNano</a> 获取时间戳。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 	<span class="n">now</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>      <span class="c">// current local time</span>
+	<span class="n">sec</span> <span class="o">:=</span> <span class="n">now</span><span class="o">.</span><span class="n">Unix</span><span class="p">()</span>      <span class="c">// number of seconds since January 1, 1970 UTC</span>
+	<span class="n">nsec</span> <span class="o">:=</span> <span class="n">now</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">()</span> <span class="c">// number of nanoseconds since January 1, 1970 UTC</span>
+
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>  <span class="c">// time.Time</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>  <span class="c">// int64</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">nsec</span><span class="p">)</span> <span class="c">// int64</span>
+</code></pre></div></div>
+
+]]></content:encoded>
+    </item>
     
     <item>
       <title>数组（arrays）与切片（slice）的定义</title>
