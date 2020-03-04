@@ -7,8 +7,211 @@
     <title>守望子的个人博客</title>
     <link href="http://localhost:4000/feed/" rel="self" />
     <link href="http://localhost:4000" />
-    <lastBuildDate>2020-03-04T15:28:29+08:00</lastBuildDate>
+    <lastBuildDate>2020-03-05T00:26:59+08:00</lastBuildDate>
     <webMaster>jianling.shih@gmail.com</webMaster>
+    
+    <item>
+      <title>如何找到星期几</title>
+      <link href="http://localhost:4000/TimeDateWeek/"/>
+      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/TimeDateWeek</guid>
+      <content:encoded><![CDATA[<p>函数<a href="https://golang.org/pkg/time/#Time.Weekday">Weekday</a>用于返回一周中的星期几。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="k">func</span> <span class="p">(</span><span class="n">t</span> <span class="n">Time</span><span class="p">)</span> <span class="n">Weekday</span><span class="p">()</span> <span class="n">Weekday</span>
+</code></pre></div></div>
+
+<p>使用:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">weekday</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Weekday</span><span class="p">()</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">weekday</span><span class="p">)</span>      <span class="c">// "Tuesday"</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">weekday</span><span class="p">))</span> <span class="c">// "2"	</span>
+		
+</code></pre></div></div>
+
+<h2 id="type-weekday">Type Weekday</h2>
+
+<p><a href="https://golang.org/pkg/time/#Weekday">time.Weekday</a>用来描述星期 比如礼拜天 Sunday=0…</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Weekday</span> <span class="kt">int</span>
+
+		<span class="k">const</span> <span class="p">(</span>
+			<span class="n">Sunday</span> <span class="n">Weekday</span> <span class="o">=</span> <span class="no">iota</span>
+			<span class="n">Monday</span>
+			<span class="n">Tuesday</span>
+			<span class="n">Wednesday</span>
+			<span class="n">Thursday</span>
+			<span class="n">Friday</span>
+			<span class="n">Saturday</span>
+		<span class="p">)</span>
+</code></pre></div></div>
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>时区</title>
+      <link href="http://localhost:4000/TimeDateTimeZone/"/>
+      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/TimeDateTimeZone</guid>
+      <content:encoded><![CDATA[<p>每个 <a href="https://golang.org/pkg/time/#Time">Time</a>都与一个<a href="https://golang.org/pkg/time/#Location">Location</a>关联，用于时区的展示。</p>
+
+<p>方法<a href="https://golang.org/pkg/time/#Time.In">In</a>会返回一个特定位置的时间。在这种方式下改变地理位置只会改变时间的表达方式，并不会真正改变当下描述的时间。</p>
+
+<p>TimeIn 这个函数会方便的改变时间的时区。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c">// TimeIn returns the time in UTC if the name is "" or "UTC".</span>
+    <span class="c">// It returns the local time if the name is "Local".</span>
+    <span class="c">// Otherwise, the name is taken to be a location name in</span>
+    <span class="c">// the IANA Time Zone database, such as "Africa/Lagos".</span>
+    <span class="k">func</span> <span class="n">TimeIn</span><span class="p">(</span><span class="n">t</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="n">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">loc</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">LoadLocation</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">In</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">err</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 	<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">name</span> <span class="o">:=</span> <span class="k">range</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+		<span class="s">""</span><span class="p">,</span>
+		<span class="s">"Local"</span><span class="p">,</span>
+		<span class="s">"Asia/Shanghai"</span><span class="p">,</span>
+		<span class="s">"America/Metropolis"</span><span class="p">,</span>
+	<span class="p">}</span> <span class="p">{</span>
+		<span class="n">t</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">TimeIn</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">(),</span> <span class="n">name</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Location</span><span class="p">(),</span> <span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"15:04"</span><span class="p">))</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">UTC</span> <span class="m">09</span><span class="o">:</span><span class="m">09</span>
+		<span class="n">Local</span> <span class="m">17</span><span class="o">:</span><span class="m">09</span>
+		<span class="n">Asia</span><span class="o">/</span><span class="n">Shanghai</span> <span class="m">17</span><span class="o">:</span><span class="m">09</span>
+		<span class="n">America</span><span class="o">/</span><span class="n">Metropolis</span> 
+</code></pre></div></div>
+
+<p><a href="https://golang.org/pkg/time/#Date">package time :Date</a></p>
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>获取年月日</title>
+      <link href="http://localhost:4000/TimeDateTimeYMD/"/>
+      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/TimeDateTimeYMD</guid>
+      <content:encoded><![CDATA[<p>函数<a href="https://golang.org/pkg/time/#Time.Date">Date</a>用于返回 <a href="https://golang.org/pkg/time/#Time">time.Time</a>的年月日信息。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">t</span> <span class="n">Time</span><span class="p">)</span> <span class="n">Date</span><span class="p">()</span> <span class="p">(</span><span class="n">year</span> <span class="kt">int</span><span class="p">,</span> <span class="n">month</span> <span class="n">Month</span><span class="p">,</span> <span class="n">day</span> <span class="kt">int</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>使用:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Date</span><span class="p">()</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span>      <span class="c">// For example 2020 March 1</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="kt">int</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="p">)</span> <span class="c">// For example 2009 3 1</span>
+</code></pre></div></div>
+
+<p>也可以单独调用提取相应的年月日：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">t</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+	<span class="n">year</span> <span class="o">:=</span> <span class="n">t</span><span class="o">.</span><span class="n">Year</span><span class="p">()</span>   <span class="c">// type int</span>
+	<span class="n">month</span> <span class="o">:=</span> <span class="n">t</span><span class="o">.</span><span class="n">Month</span><span class="p">()</span> <span class="c">// type time.Month</span>
+	<span class="n">day</span> <span class="o">:=</span> <span class="n">t</span><span class="o">.</span><span class="n">Day</span><span class="p">()</span>     <span class="c">// type int</span>
+</code></pre></div></div>
+
+<p>[time.Month]用来表示一年中的月份，比如一月份 January = 1…</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     <span class="k">const</span> <span class="p">(</span>
+        <span class="n">January</span> <span class="n">Month</span> <span class="o">=</span> <span class="m">1</span> <span class="o">+</span> <span class="no">iota</span>
+        <span class="n">February</span>
+        <span class="n">March</span>
+        <span class="n">April</span>
+        <span class="n">May</span>
+        <span class="n">June</span>
+        <span class="n">July</span>
+        <span class="n">August</span>
+        <span class="n">September</span>
+        <span class="n">October</span>
+        <span class="n">November</span>
+        <span class="n">December</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>获取月份的天数</title>
+      <link href="http://localhost:4000/TimeDateMonthDays/"/>
+      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/TimeDateMonthDays</guid>
+      <content:encoded><![CDATA[<p>为了计算20年2月份有多少天，我们可以看下3月1号的前一天。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+		    <span class="n">t</span> <span class="o">:=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span> <span class="c">// the day before 2020-03-01</span>
+		    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>        <span class="c">// 2020-02-29 00:00:00 +0000 UTC</span>
+		    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Day</span><span class="p">())</span>  <span class="c">// 29</span>
+		<span class="p">}</span>
+		
+		<span class="k">func</span> <span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="kt">int</span><span class="p">)</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="p">{</span>
+		    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
+		<span class="p">}</span>
+</code></pre></div></div>
+
+<p>函数 <a href="https://golang.org/pkg/time/#Time.AddDate">AddDate</a>可以用于日期的调整。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">t</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2019</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">31</span><span class="p">)</span><span class="o">.</span><span class="n">AddDate</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span> <span class="c">// a month after October 31</span>
+	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>                          <span class="c">// 2019-12-01 00:00:00 +0000 UTC</span>
+</code></pre></div></div>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>测量运行时间</title>
+      <link href="http://localhost:4000/TimeDateMeasure/"/>
+      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/TimeDateMeasure</guid>
+      <content:encoded><![CDATA[<p>测量的代码片段</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">start</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+		<span class="c">// Code to measure</span>
+		<span class="n">duration</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+		
+		<span class="c">// Formatted string, such as "2h3m0.5s" or "4.503μs"</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+		
+		<span class="c">// Nanoseconds as int64</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">duration</span><span class="o">.</span><span class="n">Nanoseconds</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>您可以使用这一行程序跟踪完整函数调用的执行时间，它将结果记录到标准错误流。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">foo</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="n">duration</span><span class="p">(</span><span class="n">track</span><span class="p">(</span><span class="s">"foo"</span><span class="p">))</span>
+    <span class="c">// Code to measure</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">func</span> <span class="n">track</span><span class="p">(</span><span class="n">msg</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span> <span class="p">{</span>
+	    <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+	<span class="p">}</span>
+	
+	<span class="k">func</span> <span class="n">duration</span><span class="p">(</span><span class="n">msg</span> <span class="kt">string</span><span class="p">,</span> <span class="n">start</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span> <span class="p">{</span>
+	    <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%v: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="https://golang.org/pkg/testing/">testing</a>包支持基准测试，可用于检查代码的性能。</p>
+]]></content:encoded>
+    </item>
     
     <item>
       <title>日期格式化</title>
@@ -72,6 +275,27 @@ Offset| 	-0700   -07   -07:00   Z0700   Z07:00</p>
 	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">nsec</span><span class="p">)</span> <span class="c">// int64</span>
 </code></pre></div></div>
 
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>获取两个日期相差的天数</title>
+      <link href="http://localhost:4000/TimeDateDateSub/"/>
+      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/TimeDateDateSub</guid>
+      <content:encoded><![CDATA[<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+		    <span class="c">// The leap year 2020 had 366 days.</span>
+		    <span class="n">t1</span> <span class="o">:=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+		    <span class="n">t2</span> <span class="o">:=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2021</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+		    <span class="n">days</span> <span class="o">:=</span> <span class="n">t2</span><span class="o">.</span><span class="n">Sub</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span><span class="o">.</span><span class="n">Hours</span><span class="p">()</span> <span class="o">/</span> <span class="m">24</span>
+		    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">days</span><span class="p">)</span> <span class="c">// 366</span>
+		<span class="p">}</span>
+		
+		<span class="k">func</span> <span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="kt">int</span><span class="p">)</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="p">{</span>
+		    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
+		<span class="p">}</span>
+</code></pre></div></div>
 ]]></content:encoded>
     </item>
     

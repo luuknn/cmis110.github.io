@@ -1,0 +1,22 @@
+---
+date:   2020-03-01
+layout: post
+title:  "获取两个日期相差的天数"
+tag: Time and date
+categories: Go语言学习 
+---
+
+
+```go
+		func main() {
+		    // The leap year 2020 had 366 days.
+		    t1 := Date(2020, 1, 1)
+		    t2 := Date(2021, 1, 1)
+		    days := t2.Sub(t1).Hours() / 24
+		    fmt.Println(days) // 366
+		}
+		
+		func Date(year, month, day int) time.Time {
+		    return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+		}
+```
