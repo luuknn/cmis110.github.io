@@ -7,8 +7,52 @@
     <title>守望子的个人博客</title>
     <link href="http://localhost:4000/feed/" rel="self" />
     <link href="http://localhost:4000" />
-    <lastBuildDate>2020-03-10T00:39:57+08:00</lastBuildDate>
+    <lastBuildDate>2020-03-10T01:18:23+08:00</lastBuildDate>
     <webMaster>jianling.shih@gmail.com</webMaster>
+    
+    <item>
+      <title>什么是随机种子（seed）</title>
+      <link href="http://localhost:4000/AlgorithmsSeed/"/>
+      <pubDate>2020-03-02T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/AlgorithmsSeed</guid>
+      <content:encoded><![CDATA[<p>实际上，伪随机数根本就不是随机的，它们是用一种固定的判定算法计算出来的。</p>
+
+<p>种子是伪随机数序列的起点。如果你从相同的种子开始，你会得到相同的序列。这对于调试非常有用。</p>
+
+<p>如果你希望每次都有不同的数字序列，你可以使用当前时间作为种子。</p>
+
+<h2 id="举例">举例</h2>
+<p>下面的生成器会产生97个不同数字的序列，然后重新开始。种子决定了从哪个数字开始序列。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// New returns a pseudorandom number generator Rand with a given seed.</span>
+<span class="c">// Every time you call Rand, you get a new "random" number.</span>
+<span class="k">func</span> <span class="n">New</span><span class="p">(</span><span class="n">seed</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">Rand</span> <span class="k">func</span><span class="p">()</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">current</span> <span class="o">:=</span> <span class="n">seed</span>
+    <span class="k">return</span> <span class="k">func</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+        <span class="n">next</span> <span class="o">:=</span> <span class="p">(</span><span class="m">17</span> <span class="o">*</span> <span class="n">current</span><span class="p">)</span> <span class="o">%</span> <span class="m">97</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">next</span>
+        <span class="k">return</span> <span class="n">next</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">rand1</span> <span class="o">:=</span> <span class="n">New</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">rand1</span><span class="p">(),</span> <span class="n">rand1</span><span class="p">(),</span> <span class="n">rand1</span><span class="p">())</span>
+
+    <span class="n">rand2</span> <span class="o">:=</span> <span class="n">New</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">rand2</span><span class="p">(),</span> <span class="n">rand2</span><span class="p">(),</span> <span class="n">rand2</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>			<span class="m">17</span> <span class="m">95</span> <span class="m">63</span>
+			<span class="m">34</span> <span class="m">93</span> <span class="m">29</span>
+</code></pre></div></div>
+
+<p>在大多数编程语言中，随机数生成器通常就是这样工作的，当然它们使用了更智能的函数。理想情况下，你希望通过采用一种廉价算术运算来得到一个长序列且具有良好的随机属性。例如，通常希望避免使用取模运算符。</p>
+
+]]></content:encoded>
+    </item>
     
     <item>
       <title>Runes and character encoding</title>
@@ -400,33 +444,6 @@
     <span class="p">)</span>
 </code></pre></div></div>
 
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>获取月份的天数</title>
-      <link href="http://localhost:4000/TimeDateMonthDays/"/>
-      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
-      <author>cmis110</author>
-      <guid>http://localhost:4000/TimeDateMonthDays</guid>
-      <content:encoded><![CDATA[<p>为了计算20年2月份有多少天，我们可以看下3月1号的前一天。</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-		    <span class="n">t</span> <span class="o">:=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span> <span class="c">// the day before 2020-03-01</span>
-		    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>        <span class="c">// 2020-02-29 00:00:00 +0000 UTC</span>
-		    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Day</span><span class="p">())</span>  <span class="c">// 29</span>
-		<span class="p">}</span>
-		
-		<span class="k">func</span> <span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="kt">int</span><span class="p">)</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="p">{</span>
-		    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
-		<span class="p">}</span>
-</code></pre></div></div>
-
-<p>函数 <a href="https://golang.org/pkg/time/#Time.AddDate">AddDate</a>可以用于日期的调整。</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">t</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2019</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">31</span><span class="p">)</span><span class="o">.</span><span class="n">AddDate</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span> <span class="c">// a month after October 31</span>
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>                          <span class="c">// 2019-12-01 00:00:00 +0000 UTC</span>
-</code></pre></div></div>
 ]]></content:encoded>
     </item>
     
