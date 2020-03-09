@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="cmis110" />
-    <title>如何找到星期几</title>
+    <title>生成一个唯一的字符串</title>
     <link rel="shortcut icon" href="/favicon.ico" />
     <link href="/feed/" rel="alternate" title="cmis110" type="application/atom+xml" />
     <link rel="stylesheet" href="/media/css/style.css" />
@@ -14,7 +14,7 @@
     <div id="container">
       <div id="main" role="main">
         <header>
-        <h1>如何找到星期几</h1>
+        <h1>生成一个唯一的字符串</h1>
         </header>
         <nav>
         <span><a title="网站首页" class="" href="/">首页</a></span>
@@ -28,7 +28,7 @@
         <article class="content">
             <section class="meta">
 <span class="time">
-  <time datetime="2020-03-01">2020-03-01</time>
+  <time datetime="2020-03-02">2020-03-02</time>
 </span>
 
  | 
@@ -44,50 +44,47 @@
 <span class="tags">
   标签
   
-  <a href="/tags/#Time and date" title="Time and date">Time and date</a>&nbsp;
+  <a href="/tags/#Random numbers" title="Random numbers">Random numbers</a>&nbsp;
   
 </span>
 
 </section>
 <section class="post">
-<p>函数<a href="https://golang.org/pkg/time/#Time.Weekday">Weekday</a>用于返回一周中的星期几。</p>
+<p>全球唯一标识符(<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>)或全球唯一标识符(GUID)是一个用于标识信息的128位数字。</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="k">func</span> <span class="p">(</span><span class="n">t</span> <span class="n">Time</span><span class="p">)</span> <span class="n">Weekday</span><span class="p">()</span> <span class="n">Weekday</span>
+<ul>
+  <li>uuid实际的目的是唯一的:它被复制的可能性几乎趋于0。</li>
+  <li>uuid 不依赖于中央权威，也不依赖于生成 uuid 的那些机构之间的协调。</li>
+</ul>
+
+<p>UUID 字符串表现是由32个十六制数字组成，分为5组，用连接符分割。例如：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="m">123e4567</span><span class="o">-</span><span class="n">e89b</span><span class="o">-</span><span class="m">12</span><span class="n">d3</span><span class="o">-</span><span class="n">a456</span><span class="o">-</span><span class="m">426655440000</span>
 </code></pre></div></div>
 
-<p>使用:</p>
+<h1 id="uuid生成器-举例">UUID生成器 举例</h1>
+<p>可以通过使用 <a href="https://golang.org/pkg/crypto/rand/">crypto/rand</a> 包的 <a href="https://golang.org/pkg/crypto/rand/#Read">rand.Read</a>方法来创建一个 uuid。</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">weekday</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Weekday</span><span class="p">()</span>
-		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">weekday</span><span class="p">)</span>      <span class="c">// "Tuesday"</span>
-		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">weekday</span><span class="p">))</span> <span class="c">// "2"	</span>
-		
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">b</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="m">16</span><span class="p">)</span>
+		<span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="n">uuid</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%x-%x-%x-%x-%x"</span><span class="p">,</span>
+			<span class="n">b</span><span class="p">[</span><span class="m">0</span><span class="o">:</span><span class="m">4</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">4</span><span class="o">:</span><span class="m">6</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">6</span><span class="o">:</span><span class="m">8</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">8</span><span class="o">:</span><span class="m">10</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">10</span><span class="o">:</span><span class="p">])</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="c">//d37a5f14-ee89-241a-43e6-ba84d527a095</span>
 </code></pre></div></div>
-
-<h2 id="type-weekday">Type Weekday</h2>
-
-<p><a href="https://golang.org/pkg/time/#Weekday">time.Weekday</a>用来描述星期 比如礼拜天 Sunday=0…</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Weekday</span> <span class="kt">int</span>
-
-		<span class="k">const</span> <span class="p">(</span>
-			<span class="n">Sunday</span> <span class="n">Weekday</span> <span class="o">=</span> <span class="no">iota</span>
-			<span class="n">Monday</span>
-			<span class="n">Tuesday</span>
-			<span class="n">Wednesday</span>
-			<span class="n">Thursday</span>
-			<span class="n">Friday</span>
-			<span class="n">Saturday</span>
-		<span class="p">)</span>
-</code></pre></div></div>
+<h4 id="限制">限制</h4>
+<p>这个UUID不符合<a href="https://tools.ietf.org/html/rfc4122">RFC 4122</a>。特别地，它不包含任何版本号或变体号。</p>
 
 
 </section>
 <section align="right">
 <br/>
 <span>
-	<a  href="/TimeDateTimeZone/" class="pageNav"  >上一篇</a>
+	<a  href="/RandomNumberString/" class="pageNav"  >上一篇</a>
 	&nbsp;&nbsp;&nbsp;
-	<a  href="/RandomNumberCrypto/" class="pageNav"  >下一篇</a>
+	<a  href="/StringRunes/" class="pageNav"  >下一篇</a>
 </span>
 </section>
 <!-- JiaThis Button BEGIN -->
@@ -152,7 +149,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 </script>
         </p>
         <p><small>
-            <a href="http://github.com/cmis110/jianlingshih.github.io/new/gh-pages/_posts" target="_blank" title="撰写文章">Po</a>wer<a href="http://github.com/cmis110/jianlingshih.github.io/edit/gh-pages/_posts/2020-03-01-TimeDateWeek.md" target="_blank" title="编辑页面">ed</a> by <a href="http://jekyllrb.com" target="_blank">Jekyll</a> @ <a href="http://github.com/cmis110/cmis110.github.io" target="_blank" title="项目主页">GitHub</a>
+            <a href="http://github.com/cmis110/jianlingshih.github.io/new/gh-pages/_posts" target="_blank" title="撰写文章">Po</a>wer<a href="http://github.com/cmis110/jianlingshih.github.io/edit/gh-pages/_posts/2020-03-02-RandomNumberUnique.md" target="_blank" title="编辑页面">ed</a> by <a href="http://jekyllrb.com" target="_blank">Jekyll</a> @ <a href="http://github.com/cmis110/cmis110.github.io" target="_blank" title="项目主页">GitHub</a>
              | <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/cn/" target="_blank" title="许可协议">©</a> 2019 - 2020 <a href="/about/">cmis110</a>
              | <a href="https://weibo.com/cmis110" target="_blank">@守望子</a>
 

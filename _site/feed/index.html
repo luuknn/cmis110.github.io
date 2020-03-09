@@ -7,8 +7,265 @@
     <title>守望子的个人博客</title>
     <link href="http://localhost:4000/feed/" rel="self" />
     <link href="http://localhost:4000" />
-    <lastBuildDate>2020-03-05T00:26:59+08:00</lastBuildDate>
+    <lastBuildDate>2020-03-10T00:39:57+08:00</lastBuildDate>
     <webMaster>jianling.shih@gmail.com</webMaster>
+    
+    <item>
+      <title>Runes and character encoding</title>
+      <link href="http://localhost:4000/StringRunes/"/>
+      <pubDate>2020-03-02T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/StringRunes</guid>
+      <content:encoded><![CDATA[<p>ASCII码定义128个字符，由代码点0-127标识。它包括英文字母、拉丁数字和其他一些字符。</p>
+
+<p>Unicode是ASCII的一个超集，它定义了一个包含1,114,112个码点的codespace。Unicode版本10.0包含139个现代和历史脚本(包括runic字母表，但不包括Klingon)，以及多个符号集。</p>
+
+<h1 id="strings-and-utf-8-encoding">Strings and UTF-8 encoding</h1>
+
+<p>字符串是字节序列 并不是 rune 序列。</p>
+
+<p>但是，字符串通常包含用UTF-8编码的Unicode文本，它使用1到4个字节对所有Unicode码点进行编码。(ASCII字符用一个字节编码，而其他代码点用得更多。)</p>
+
+<p>由于Go源代码本身被编码为UTF-8，字符串文本将自动获得这种编码。</p>
+
+<p>例如，在字符串“cafe”中，字符e(代码点233)使用两个字节进行编码，而ASCII字符c、a和f(代码点99、97和102)只使用一个字节</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="s">"café"</span><span class="p">))</span> <span class="c">// [99 97 102 195 169]</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">([]</span><span class="kt">rune</span><span class="p">(</span><span class="s">"café"</span><span class="p">))</span> <span class="c">// [99 97 102 233]</span>
+</code></pre></div></div>
+
+<h1 id="byte-与-rune">[]byte 与 []rune</h1>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="c">// byte is an alias for uint8 and is equivalent to uint8 in all ways. It is</span>
+		<span class="c">// used, by convention, to distinguish byte values from 8-bit unsigned</span>
+		<span class="c">// integer values.</span>
+		<span class="k">type</span> <span class="kt">byte</span> <span class="o">=</span> <span class="kt">uint8</span>
+		
+		<span class="c">// rune is an alias for int32 and is equivalent to int32 in all ways. It is</span>
+		<span class="c">// used, by convention, to distinguish character values from integer values.</span>
+		<span class="k">type</span> <span class="kt">rune</span> <span class="o">=</span> <span class="kt">int32</span>
+</code></pre></div></div>
+<p>原来是 byte 表示一个字节，rune 表示四个字节，那么就可以得出了结论了，来看一段代码，使用中文字符串.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">bj</span> <span class="o">:=</span> <span class="s">"北京欢迎你"</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">([]</span><span class="kt">rune</span><span class="p">(</span><span class="n">bj</span><span class="p">))</span><span class="c">//[21271 20140 27426 36814 20320]</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">bj</span><span class="p">))</span><span class="c">//[229 140 151 228 186 172 230 172 162 232 191 142 228 189 160]</span>
+</code></pre></div></div>
+<p>这里可以看出中文字符串每个占3个字节。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">res</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">(</span><span class="s">"北京欢迎你"</span><span class="p">)</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="kt">string</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="o">:</span><span class="m">2</span><span class="p">]))</span><span class="c">//北京</span>
+</code></pre></div></div>
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>生成一个唯一的字符串</title>
+      <link href="http://localhost:4000/RandomNumberUnique/"/>
+      <pubDate>2020-03-02T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/RandomNumberUnique</guid>
+      <content:encoded><![CDATA[<p>全球唯一标识符(<a href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a>)或全球唯一标识符(GUID)是一个用于标识信息的128位数字。</p>
+
+<ul>
+  <li>uuid实际的目的是唯一的:它被复制的可能性几乎趋于0。</li>
+  <li>uuid 不依赖于中央权威，也不依赖于生成 uuid 的那些机构之间的协调。</li>
+</ul>
+
+<p>UUID 字符串表现是由32个十六制数字组成，分为5组，用连接符分割。例如：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="m">123e4567</span><span class="o">-</span><span class="n">e89b</span><span class="o">-</span><span class="m">12</span><span class="n">d3</span><span class="o">-</span><span class="n">a456</span><span class="o">-</span><span class="m">426655440000</span>
+</code></pre></div></div>
+
+<h1 id="uuid生成器-举例">UUID生成器 举例</h1>
+<p>可以通过使用 <a href="https://golang.org/pkg/crypto/rand/">crypto/rand</a> 包的 <a href="https://golang.org/pkg/crypto/rand/#Read">rand.Read</a>方法来创建一个 uuid。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">b</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="m">16</span><span class="p">)</span>
+		<span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+			<span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="n">uuid</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%x-%x-%x-%x-%x"</span><span class="p">,</span>
+			<span class="n">b</span><span class="p">[</span><span class="m">0</span><span class="o">:</span><span class="m">4</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">4</span><span class="o">:</span><span class="m">6</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">6</span><span class="o">:</span><span class="m">8</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">8</span><span class="o">:</span><span class="m">10</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="m">10</span><span class="o">:</span><span class="p">])</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">uuid</span><span class="p">)</span> <span class="c">//d37a5f14-ee89-241a-43e6-ba84d527a095</span>
+</code></pre></div></div>
+<h4 id="限制">限制</h4>
+<p>这个UUID不符合<a href="https://tools.ietf.org/html/rfc4122">RFC 4122</a>。特别地，它不包含任何版本号或变体号。</p>
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>生成随机字符串（密码）</title>
+      <link href="http://localhost:4000/RandomNumberString/"/>
+      <pubDate>2020-03-02T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/RandomNumberString</guid>
+      <content:encoded><![CDATA[<h1 id="随机字符串">随机字符串</h1>
+<p>从瑞典字母(包括非ascii字符å, ä 和 ö))中生成随机的数字和字符字符串。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">rand</span><span class="o">.</span><span class="n">Seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">())</span>
+		<span class="n">chars</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">(</span><span class="s">"ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"</span> <span class="o">+</span>
+			<span class="s">"abcdefghijklmnopqrstuvwxyzåäö"</span> <span class="o">+</span>
+			<span class="s">"0123456789"</span><span class="p">)</span>
+		<span class="n">length</span> <span class="o">:=</span> <span class="m">8</span>
+		<span class="k">var</span> <span class="n">b</span> <span class="n">strings</span><span class="o">.</span><span class="n">Builder</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+			<span class="n">b</span><span class="o">.</span><span class="n">WriteRune</span><span class="p">(</span><span class="n">chars</span><span class="p">[</span><span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">))])</span>
+		<span class="p">}</span>
+		<span class="n">str</span> <span class="o">:=</span> <span class="n">b</span><span class="o">.</span><span class="n">String</span><span class="p">()</span> <span class="c">// E.g. "PsVwäDFU"</span>
+</code></pre></div></div>
+
+<h1 id="带约束的随机字符串">带约束的随机字符串</h1>
+<p>以下代码演示生成一个随机ASCII字符串，该字符串至少包含一个数字和一个特殊字符。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">rand</span><span class="o">.</span><span class="n">Seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">())</span>
+		<span class="n">digits</span> <span class="o">:=</span> <span class="s">"0123456789"</span>
+		<span class="n">specials</span> <span class="o">:=</span> <span class="s">"~=+%^*/()[]{}/!@#$?|"</span>
+		<span class="n">all</span> <span class="o">:=</span> <span class="s">"ABCDEFGHIJKLMNOPQRSTUVWXYZ"</span> <span class="o">+</span>
+			<span class="s">"abcdefghijklmnopqrstuvwxyz"</span> <span class="o">+</span>
+			<span class="n">digits</span> <span class="o">+</span> <span class="n">specials</span>
+		<span class="n">length</span> <span class="o">:=</span> <span class="m">8</span>
+		<span class="n">buf</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+		<span class="n">buf</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">digits</span><span class="p">[</span><span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">))]</span>
+		<span class="n">buf</span><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">specials</span><span class="p">[</span><span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">specials</span><span class="p">))]</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+			<span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">all</span><span class="p">[</span><span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all</span><span class="p">))]</span>
+		<span class="p">}</span>
+		<span class="n">rand</span><span class="o">.</span><span class="n">Shuffle</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="k">func</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">buf</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		<span class="p">})</span>
+		<span class="n">str</span> <span class="o">:=</span> <span class="kt">string</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="c">// E.g. "$Lu2y/6+"</span>
+</code></pre></div></div>
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>打乱切片或数组的顺序</title>
+      <link href="http://localhost:4000/RandomNumberShuffle/"/>
+      <pubDate>2020-03-02T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/RandomNumberShuffle</guid>
+      <content:encoded><![CDATA[<p><a href="https://golang.org/pkg/math/rand/">math/rand</a> 包中方法 <a href="https://golang.org/pkg/math/rand/#Shuffle">rand.Shuffle</a> 会通过指定的交换函数打乱数组的输入序列即进行洗牌。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">8</span><span class="p">}</span>
+		<span class="n">rand</span><span class="o">.</span><span class="n">Seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">())</span>
+		<span class="n">rand</span><span class="o">.</span><span class="n">Shuffle</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="k">func</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">})</span>
+		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c">//[4 7 6 1 3 5 8 2]</span>
+
+</code></pre></div></div>
+
+<h4 id="go-110-之前">Go 1.10 之前</h4>
+<p>会使用  <a href="https://golang.org/pkg/math/rand/">math/rand</a> 包中的 <a href="https://golang.org/pkg/math/rand/#Seed">rand.Seed</a> 和 <a href="https://golang.org/pkg/math/rand/#Intn">rand.Intn</a> 函数来打乱切片的顺序。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">8</span><span class="p">}</span>
+		<span class="n">rand</span><span class="o">.</span><span class="n">Seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">())</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span> <span class="p">{</span> <span class="c">// Fisher–Yates shuffle</span>
+		    <span class="n">j</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="m">1</span><span class="p">)</span>
+		    <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		<span class="p">}</span>
+</code></pre></div></div>
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>生成随机数、字符和切片元素</title>
+      <link href="http://localhost:4000/RandomNumberRandom/"/>
+      <pubDate>2020-03-02T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/RandomNumberRandom</guid>
+      <content:encoded><![CDATA[<h1 id="go伪随机数">Go伪随机数</h1>
+<p>可以使用 <a href="https://golang.org/pkg/math/rand/">math/rand</a> 包内的 <a href="https://golang.org/pkg/math/rand/#Seed">rand.Seed</a> 和 <a href="rand.Int63">rand.Int63</a> 方法来生成一个非负的int64型的伪随机数。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">rand</span><span class="o">.</span><span class="n">Seed</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">())</span>
+	<span class="n">n</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Int63</span><span class="p">()</span> <span class="c">// for example 4601851300195147788</span>
+</code></pre></div></div>
+<p>同样的，可以调用 rand.Float64 来生成一个浮点数 a , 0 ≤ a &lt; 1</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">x</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Float64</span><span class="p">()</span> <span class="c">// for example 0.49893371771268225</span>
+</code></pre></div></div>
+<h3 id="随机源">随机源</h3>
+<p><a href="https://golang.org/pkg/math/rand/">math/rand</a> 包内的方法都使用同一个随机源。</p>
+
+<p>如果需要，您可以自己设置一个随机种子并创建一个新的<a href="https://golang.org/pkg/math/rand/#Rand">Rand</a>类型的随机生成器，并用它的方法来生成随机数。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">generator</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">NewSource</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">()))</span>
+		<span class="n">n</span> <span class="o">:=</span> <span class="n">generator</span><span class="o">.</span><span class="n">Int63</span><span class="p">()</span>
+		<span class="n">x</span> <span class="o">:=</span> <span class="n">generator</span><span class="o">.</span><span class="n">Float64</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<h1 id="给定范围内生成随机数或字符">给定范围内生成随机数或字符</h1>
+
+<h3 id="a-到-b-之间的数字">a 到 b 之间的数字</h3>
+
+<p>调用函数 <a href="rand.Intn(m)">rand.Intn(m)</a> 将会返回随机数 n ，并且 0 ≤ n &lt; m.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">n</span> <span class="o">:=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="o">+</span><span class="m">1</span><span class="p">)</span> <span class="c">// a ≤ n ≤ b</span>
+</code></pre></div></div>
+
+<h3 id="a-到-z-之间的字符">a 到 z 之间的字符</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">c</span> <span class="o">:=</span> <span class="sc">'a'</span> <span class="o">+</span> <span class="kt">rune</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="sc">'z'</span><span class="o">-</span><span class="sc">'a'</span><span class="o">+</span><span class="m">1</span><span class="p">))</span> <span class="c">// 'a' ≤ c ≤ 'z'</span>
+</code></pre></div></div>
+
+<h1 id="随机切片元素">随机切片元素</h1>
+<p>可以通过选定一个随机的索引来从任意一个切片中生成一个字符。</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">chars</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">rune</span><span class="p">(</span><span class="s">"AB⌘"</span><span class="p">)</span>
+		<span class="n">c</span> <span class="o">:=</span> <span class="n">chars</span><span class="p">[</span><span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">))]</span> <span class="c">// for example '⌘'</span>
+</code></pre></div></div>
+
+]]></content:encoded>
+    </item>
+    
+    <item>
+      <title>容易使用的加密rand包</title>
+      <link href="http://localhost:4000/RandomNumberCrypto/"/>
+      <pubDate>2020-03-02T00:00:00+08:00</pubDate>
+      <author>cmis110</author>
+      <guid>http://localhost:4000/RandomNumberCrypto</guid>
+      <content:encoded><![CDATA[<p>Go 提供了两个生成随机数的包。</p>
+
+<ul>
+  <li><a href="https://golang.org/pkg/math/rand/">math/rand</a>实现了伪随机数生成器。</li>
+  <li><a href="https://golang.org/pkg/crypto/rand/">crypto/rand</a>使用有限的接口实现加密安全的伪随机数生成器。</li>
+</ul>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">(</span>
+    <span class="n">crand</span> <span class="s">"crypto/rand"</span>
+    <span class="n">rand</span> <span class="s">"math/rand"</span>
+
+    <span class="s">"encoding/binary"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"log"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">src</span> <span class="n">cryptoSource</span>
+    <span class="n">rnd</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">rnd</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="m">1000</span><span class="p">))</span> <span class="c">// a truly random number 0 to 999</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">cryptoSource</span> <span class="k">struct</span><span class="p">{}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="n">cryptoSource</span><span class="p">)</span> <span class="n">Seed</span><span class="p">(</span><span class="n">seed</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">{}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="n">cryptoSource</span><span class="p">)</span> <span class="n">Int63</span><span class="p">()</span> <span class="kt">int64</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kt">int64</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">Uint64</span><span class="p">()</span> <span class="o">&amp;</span> <span class="o">^</span><span class="kt">uint64</span><span class="p">(</span><span class="m">1</span><span class="o">&lt;&lt;</span><span class="m">63</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="n">cryptoSource</span><span class="p">)</span> <span class="n">Uint64</span><span class="p">()</span> <span class="p">(</span><span class="n">v</span> <span class="kt">uint64</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">err</span> <span class="o">:=</span> <span class="n">binary</span><span class="o">.</span><span class="n">Read</span><span class="p">(</span><span class="n">crand</span><span class="o">.</span><span class="n">Reader</span><span class="p">,</span> <span class="n">binary</span><span class="o">.</span><span class="n">BigEndian</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">v</span>
+<span class="p">}</span>
+</code></pre></div></div>
+]]></content:encoded>
+    </item>
     
     <item>
       <title>如何找到星期几</title>
@@ -170,284 +427,6 @@
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">t</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2019</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">31</span><span class="p">)</span><span class="o">.</span><span class="n">AddDate</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span> <span class="c">// a month after October 31</span>
 	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>                          <span class="c">// 2019-12-01 00:00:00 +0000 UTC</span>
 </code></pre></div></div>
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>测量运行时间</title>
-      <link href="http://localhost:4000/TimeDateMeasure/"/>
-      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
-      <author>cmis110</author>
-      <guid>http://localhost:4000/TimeDateMeasure</guid>
-      <content:encoded><![CDATA[<p>测量的代码片段</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="n">start</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
-		<span class="c">// Code to measure</span>
-		<span class="n">duration</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
-		
-		<span class="c">// Formatted string, such as "2h3m0.5s" or "4.503μs"</span>
-		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
-		
-		<span class="c">// Nanoseconds as int64</span>
-		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">duration</span><span class="o">.</span><span class="n">Nanoseconds</span><span class="p">())</span>
-</code></pre></div></div>
-
-<p>您可以使用这一行程序跟踪完整函数调用的执行时间，它将结果记录到标准错误流。</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">foo</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">defer</span> <span class="n">duration</span><span class="p">(</span><span class="n">track</span><span class="p">(</span><span class="s">"foo"</span><span class="p">))</span>
-    <span class="c">// Code to measure</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">func</span> <span class="n">track</span><span class="p">(</span><span class="n">msg</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span> <span class="p">{</span>
-	    <span class="k">return</span> <span class="n">msg</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
-	<span class="p">}</span>
-	
-	<span class="k">func</span> <span class="n">duration</span><span class="p">(</span><span class="n">msg</span> <span class="kt">string</span><span class="p">,</span> <span class="n">start</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span> <span class="p">{</span>
-	    <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%v: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
-	<span class="p">}</span>
-</code></pre></div></div>
-
-<p><a href="https://golang.org/pkg/testing/">testing</a>包支持基准测试，可用于检查代码的性能。</p>
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>日期格式化</title>
-      <link href="http://localhost:4000/TimeDateFormat/"/>
-      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
-      <author>cmis110</author>
-      <guid>http://localhost:4000/TimeDateFormat</guid>
-      <content:encoded><![CDATA[<h1 id="基本示例">基本示例</h1>
-
-<p>Go 没有采用 yyyy-mm-dd 的展现来格式化时间，而是采用了一个特殊的时间格式<br />
-　　　&lt;font color=#008000&gt; Mon Jan 2 15:04:05 MST 2006 &lt;/font&gt; <br />
-同样格式的时间可以被解析。这个特使的时间格式可以按下面这种方式方便记忆 　&lt;font color=#008000&gt;　2006-01-02 15:04  &lt;/font&gt;</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">const</span> <span class="p">(</span>
-		<span class="n">layoutISO</span> <span class="o">=</span> <span class="s">"2006-01-02"</span>
-		<span class="n">layoutUS</span>  <span class="o">=</span> <span class="s">"January 2, 2006"</span>
-	<span class="p">)</span>
-	<span class="n">date</span> <span class="o">:=</span> <span class="s">"2020-02-29"</span>
-	<span class="n">t</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">layoutISO</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>                  <span class="c">// 2020-02-29 00:00:00 +0000 UTC</span>
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">layoutUS</span><span class="p">))</span> <span class="c">// February 29, 2020</span>
-</code></pre></div></div>
-
-<p>函数</p>
-
-<ul>
-  <li><a href="https://golang.org/pkg/time/#Parse">time.Parse</a>可以用来解析一个日期字符串。</li>
-  <li><a href="https://golang.org/pkg/time/#Time.Format">Format</a>可以对一个 <a href="https://golang.org/pkg/time/#Time">time.Time</a>的值进行格式化。</li>
-</ul>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="k">func</span> <span class="n">Parse</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">value</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="n">Time</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
-      <span class="k">func</span> <span class="p">(</span><span class="n">t</span> <span class="n">Time</span><span class="p">)</span> <span class="n">Format</span><span class="p">(</span><span class="n">layout</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span>
-</code></pre></div></div>
-
-<h1 id="格式化可选项">格式化可选项</h1>
-<p>Type | Options
-:—-:  | :—-: 
-Year	 | 06   2006
-Month	| 01   1   Jan   January
-Day	| 02   2   _2   (width two, right justified)
-Weekday| 	Mon   Monday
-Hours| 	03   3   15
-Minutes| 	04   4
-Seconds	| 05   5
-ms μs ns	| .000   .000000   .000000000
-ms μs ns	| .999   .999999   .999999999   (trailing zeros removed)
-am/pm| 	PM   pm
-Timezone	| MST
-Offset| 	-0700   -07   -07:00   Z0700   Z07:00</p>
-
-<h1 id="获取当前时间戳">获取当前时间戳</h1>
-<p>可以使用<a href="https://golang.org/pkg/time/#Now">time.Now</a>和方法
- <a href="https://golang.org/pkg/time/#Time.Unix">time.Unix</a> 或则 <a href="https://golang.org/pkg/time/#Time.UnixNano">time.UnixNano</a> 获取时间戳。</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 	<span class="n">now</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>      <span class="c">// current local time</span>
-	<span class="n">sec</span> <span class="o">:=</span> <span class="n">now</span><span class="o">.</span><span class="n">Unix</span><span class="p">()</span>      <span class="c">// number of seconds since January 1, 1970 UTC</span>
-	<span class="n">nsec</span> <span class="o">:=</span> <span class="n">now</span><span class="o">.</span><span class="n">UnixNano</span><span class="p">()</span> <span class="c">// number of nanoseconds since January 1, 1970 UTC</span>
-
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">now</span><span class="p">)</span>  <span class="c">// time.Time</span>
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>  <span class="c">// int64</span>
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">nsec</span><span class="p">)</span> <span class="c">// int64</span>
-</code></pre></div></div>
-
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>获取两个日期相差的天数</title>
-      <link href="http://localhost:4000/TimeDateDateSub/"/>
-      <pubDate>2020-03-01T00:00:00+08:00</pubDate>
-      <author>cmis110</author>
-      <guid>http://localhost:4000/TimeDateDateSub</guid>
-      <content:encoded><![CDATA[<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-		    <span class="c">// The leap year 2020 had 366 days.</span>
-		    <span class="n">t1</span> <span class="o">:=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2020</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
-		    <span class="n">t2</span> <span class="o">:=</span> <span class="n">Date</span><span class="p">(</span><span class="m">2021</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
-		    <span class="n">days</span> <span class="o">:=</span> <span class="n">t2</span><span class="o">.</span><span class="n">Sub</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span><span class="o">.</span><span class="n">Hours</span><span class="p">()</span> <span class="o">/</span> <span class="m">24</span>
-		    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">days</span><span class="p">)</span> <span class="c">// 366</span>
-		<span class="p">}</span>
-		
-		<span class="k">func</span> <span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="kt">int</span><span class="p">)</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="p">{</span>
-		    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">Month</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="n">day</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
-		<span class="p">}</span>
-</code></pre></div></div>
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>数组（arrays）与切片（slice）的定义</title>
-      <link href="http://localhost:4000/SlicesArraysExplained/"/>
-      <pubDate>2020-02-29T00:00:00+08:00</pubDate>
-      <author>cmis110</author>
-      <guid>http://localhost:4000/SlicesArraysExplained</guid>
-      <content:encoded><![CDATA[<h1 id="概念">概念</h1>
-
-<p>一个切片不会存储数据,它只是描述了底层数组的一部分</p>
-
-<ul>
-  <li>当更改切片的某个元素时，将修改它底层数组的相应元素，共享同一块底层数组的其他切片也会感受到变化。</li>
-  <li>切片可以在底层数组的范围内增长和收缩。</li>
-  <li>切片通常按以下方式进行索引 s[i] 访问第 i 个元素，从0开始。</li>
-</ul>
-
-<h1 id="创建">创建</h1>
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">var</span> <span class="n">s</span> <span class="p">[]</span><span class="kt">int</span> <span class="c">// a nil slice</span>
-	<span class="n">s1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"foo"</span><span class="p">,</span> <span class="s">"bar"</span><span class="p">}</span>
-	<span class="n">s2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>          <span class="c">// same as []int{0, 0}</span>
-	<span class="n">s3</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">4</span><span class="p">)</span>       <span class="c">// same as new([4]int)[:2]</span>
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s3</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">s3</span><span class="p">))</span> <span class="c">// 2 4</span>
-</code></pre></div></div>
-
-<ul>
-  <li>切片的零值为 nil. 方法 len cap append 都会将 nil 视为容量为0的空片。</li>
-  <li>你可以通过调用 make 函数来进行切片的创建，可将长度和容量作为参数。</li>
-  <li>内置的方法 <a href="https://golang.org/pkg/builtin/#len">len</a> 和 <a href="https://golang.org/pkg/builtin/#cap">cap</a> 获取长度和容量。</li>
-</ul>
-
-<h1 id="切片">切片</h1>
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">a</span> <span class="o">:=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span> <span class="c">// an array</span>
-	<span class="n">s</span> <span class="o">:=</span> <span class="n">a</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span>               <span class="c">// s == []int{1, 2}        cap(s) == 3</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">:</span><span class="m">2</span><span class="p">]</span>                 <span class="c">// s == []int{0, 1}        cap(s) == 4</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="m">2</span><span class="o">:</span><span class="p">]</span>                 <span class="c">// s == []int{2, 3}        cap(s) == 2</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">:</span><span class="p">]</span>                  <span class="c">// s == []int{0, 1, 2, 3}  cap(s) == 4</span>
-</code></pre></div></div>
-<p>你可以创建一个切片通过一个已经存在的数组或切片。</p>
-<ul>
-  <li>一个切片可以通过指定上下边界s[low:hign] 来创建。这样一个切片将会选择一个包含第一个元素但不包含最后一个元素的半开范围。</li>
-  <li>你可以忽略低或高的界限来使用它们的默认值。默认情况下，低边界为0 高边界为该切片的长度。</li>
-</ul>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">}</span> <span class="c">// a slice</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">]</span>                <span class="c">// s == []int{1, 2, 3}</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">2</span><span class="p">]</span>                <span class="c">// s == []int{2} (index relative to slice)</span>
-	<span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="o">:</span><span class="m">3</span><span class="p">]</span>                 <span class="c">// s == []int{2, 3, 4} (extend length)</span>
-</code></pre></div></div>
-<p>当给一个切片进行切片的时候，索引是相对于切片而言的，而不是底层的数组</p>
-<ul>
-  <li>上限不是由切片的长度决定的，而是由它的容量决定的，这意味着你可以延长切片的长度。</li>
-  <li>尝试上限超越切片的容量，将会引发一次 panic。</li>
-</ul>
-
-<h1 id="迭代">迭代</h1>
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"Foo"</span><span class="p">,</span> <span class="s">"Bar"</span><span class="p">}</span>
-	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span> <span class="p">{</span>
-		<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-	<span class="p">}</span>
-</code></pre></div></div>
-<ul>
-  <li>迭代值将会分配给变量 i，v 就像在赋值语句中一样。</li>
-  <li>第二个迭代参数是可选的。</li>
-  <li>如果 slice 为 nil，迭代的次数将会为0。开始循环迭代前，内部会进行一次判断。</li>
-</ul>
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>删除切片元素的2种方法</title>
-      <link href="http://localhost:4000/SlicesArraysDelete/"/>
-      <pubDate>2020-02-29T00:00:00+08:00</pubDate>
-      <author>cmis110</author>
-      <guid>http://localhost:4000/SlicesArraysDelete</guid>
-      <content:encoded><![CDATA[<h1 id="快速版本改变顺序">快速版本（改变顺序）</h1>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">,</span> <span class="s">"E"</span><span class="p">}</span>
-	<span class="n">i</span> <span class="o">:=</span> <span class="m">2</span>
-
-	<span class="c">// Remove the element at index i from a.</span>
-	<span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="c">// Copy last element to index i.</span>
-	<span class="n">a</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">""</span>   <span class="c">// Erase last element (write zero value).</span>
-	<span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">:</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>   <span class="c">// Truncate slice.</span>
-
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c">// [A B E D]</span>
-</code></pre></div></div>
-<p>这段代码拷贝了一个元素，时间复杂度为常数阶。</p>
-
-<h1 id="慢速版本保持顺序">慢速版本（保持顺序）</h1>
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">,</span> <span class="s">"E"</span><span class="p">}</span>
-<span class="n">i</span> <span class="o">:=</span> <span class="m">2</span>
-
-<span class="c">// Remove the element at index i from a.</span>
-<span class="nb">copy</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">:</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="m">1</span><span class="o">:</span><span class="p">])</span> <span class="c">// Shift a[i+1:] left one index.</span>
-<span class="n">a</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">""</span>     <span class="c">// Erase last element (write zero value).</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">:</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">-</span><span class="m">1</span><span class="p">]</span>     <span class="c">// Truncate slice.</span>
-
-<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c">// [A B D E]</span>
-</code></pre></div></div>
-<p>这段代码拷贝了 len(a)-i-1个元素，时间复杂度为线性阶。</p>
-]]></content:encoded>
-    </item>
-    
-    <item>
-      <title>切片或数组的3种比较方式</title>
-      <link href="http://localhost:4000/SlicesArraysCompare/"/>
-      <pubDate>2020-02-29T00:00:00+08:00</pubDate>
-      <author>cmis110</author>
-      <guid>http://localhost:4000/SlicesArraysCompare</guid>
-      <content:encoded><![CDATA[<h1 id="通用案例">通用案例</h1>
-
-<p>在大多数情况下，你将会自己编写代码来比较两个切片中的元素</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Equal tells whether a and b contain the same elements.</span>
-<span class="c">// A nil argument is equivalent to an empty slice.</span>
-<span class="k">func</span> <span class="n">Equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="no">false</span>
-	<span class="p">}</span>
-	<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">a</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="no">false</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="no">true</span>
-<span class="p">}</span>
-
-</code></pre></div></div>
-<p>对于数组来说，可以直接使用比较运算符 == 和 !=</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">a</span> <span class="o">:=</span> <span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">}</span>  
-	<span class="n">b</span> <span class="o">:=</span> <span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">}</span>  
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="c">// false</span>
-</code></pre></div></div>
-<p>当数组的元素是可比较的时候，数组也是可比较的 。<br />
-如果两个数组对应的元素是相等的那么这两个数组也是相等的，返回 true。 <br />
-[-go 语言说明：比较运算符] (https://golang.org/ref/spec#Comparison_operators)</p>
-
-<h1 id="byte-slice">byte slice</h1>
-<p>我们可以使用<a href="https://golang.org/pkg/bytes/#Equal">bytes.Equal</a>来比较 byte 型的切片。</p>
-
-<h1 id="递归比较">递归比较</h1>
-<p>出于测试目的，你会选择使用<a href="https://golang.org/pkg/reflect/#DeepEqual">reflect.DeepEqual</a>。它用来循环地比较两个任意类型的元素。</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">var</span> <span class="n">a</span> <span class="p">[]</span><span class="kt">int</span> <span class="o">=</span> <span class="no">nil</span>
-	<span class="k">var</span> <span class="n">b</span> <span class="p">[]</span><span class="kt">int</span> <span class="o">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
-	<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">reflect</span><span class="o">.</span><span class="n">DeepEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span> <span class="c">// false</span>
-</code></pre></div></div>
-<p>这个函数的性能相比上面的要差很多，但是在简单性和准确性非常严格的情况下是非常有用的。</p>
 ]]></content:encoded>
     </item>
     
