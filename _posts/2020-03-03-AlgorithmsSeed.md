@@ -3,7 +3,7 @@ date:   2020-03-03
 layout: post
 title:  "什么是随机种子（seed）"
 tag: "Algorithms"
-categories: "算法"
+categories: "Algorithms"
 ---
 
 实际上，伪随机数根本就不是随机的，它们是用一种固定的判定算法计算出来的。
